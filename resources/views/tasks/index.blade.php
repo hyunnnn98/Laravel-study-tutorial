@@ -9,7 +9,9 @@ Tasks
 <ul>
     {{-- {{$tasks}} --}}
     @foreach ($tasks as $task)
-    <li>Title: {{ $task->title }} <small>Created at {{ $task -> created_at}}</small></li>
+    <a href="/tasks/{{$task->id}}">
+        <li>Title: {{ $task->title }} <small>Created at {{ $task -> created_at}}</small></li>
+    </a>
     @endforeach
 </ul>
 @endsection

@@ -7,7 +7,9 @@ Create Task
 @section('content')
 <h1>Create Task</h1>
 <form method="POST" action="/tasks">
-    // csrf를 선언 -> hidden값으로 해당 action에 보안값을 넘겨준다. == 인증.
+    /*
+    csrf를 선언 -> hidden값으로 해당 action에 보안값을 넘겨준다. == 인증.
+    */
     @csrf
     <div>
         <label for="title">Title</label>

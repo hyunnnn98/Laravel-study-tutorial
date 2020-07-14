@@ -11,9 +11,11 @@
 
 <body>
     <ul>
-        <li><a href="/">Welcome</a></li>
-        <li><a href="/contact">contact</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/contact">Contact</a></li>
         <li><a href="/hello">Hello</a></li>
+        <li><a href="/tasks">Task</a></li>
+        <li><a href="/tasks/create">Create</a></li>
     </ul>
     @yield('content')
 </body>
