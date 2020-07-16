@@ -25,19 +25,32 @@ Route::get('/projects', 'ProjectController@index');
     get로 보낼때 복수형으로 선언, action이 create
     post로 보낼때 복수형으로 선언, action이 store
 */
-Route::get('/tasks', 'TaskController@index');
+/*
+    [ How to Set Laravel Middleware Setting ]
+    (1) 1 : 1 Route Middleware Setting
+ */
+Route::get('/tasks', 'TaskController@index')->middleware('auth');
+/*
+    (2) 1 : n Route Middleware Setting
 
-Route::get('/tasks/create', 'TaskController@create');
+    1. prefix를 선언하여 url에 공용 주소 셋팅.
+    2. prefix로 선언 된 Route에 공용 Middleware Setting => group으로 묶어주기.
+*/
+Route::prefix('tasks')->middleware('auth')->group(function () {
 
-Route::post('/tasks', 'TaskController@store');
+    Route::get('/create', 'TaskController@create')->middleware('auth');;
 
-Route::get('/tasks/{task}', 'TaskController@show');
+    Route::post('/', 'TaskController@store');
 
-Route::get('/tasks/{task}/edit', 'TaskController@edit');
+    Route::get('/{task}', 'TaskController@show');
 
-Route::put('/tasks/{task}', 'TaskController@update');
+    Route::get('/{task}/edit', 'TaskController@edit');
 
-Route::delete('/tasks/{task}', 'TaskController@destroy');
+    Route::put('/{task}', 'TaskController@update');
+
+    Route::delete('/{task}', 'TaskController@destroy');
+});
+
 
 Auth::routes();
 
