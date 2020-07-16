@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title')
 Task detail
@@ -16,7 +16,8 @@ Task detail
         <button>Delete</button>
     </form>
 </div>
-Title: {{ $task -> title }} <small>Created at {{ $task->created_at }}</small><br>
+Title: {{ $task -> title }}<br>
+<small>Created at {{ $task->created_at }}</small><br>
 <small>Updated at {{ $task->updated_at }}</small><br>
 Body
 <div>{{ $task -> body }}</div>

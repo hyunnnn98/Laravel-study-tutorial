@@ -9,7 +9,8 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::latest()->get();
+        // 유저 아이디값으로 검색하여 data return.
+        $tasks = Task::latest()->where('user_id', auth()->id())->get();
         return view('tasks.index', [
             'tasks' => $tasks
         ]);
@@ -22,6 +23,7 @@ class TaskController extends Controller
     }
 
     /*
+        [CREATE]
         5번라인에 선언한 Request에서 해당 페이지의 Request된 값 바인딩.
         (파라매터에 선언) Request $request
     */
@@ -35,11 +37,13 @@ class TaskController extends Controller
             'title' => 'required',
             'body' => 'required',
         ]);
-        /*
-            [CREATE]
-            Task 레코드를 생성 -> 생성된 Task에 title, body에 데이터를 넣기.
-        */
-        $task = Task::create(request(['title', 'body']));
+        // 1) request로 넘어온 값 배열에 바인딩.
+        $values = request(['title', 'body']);
+        // 2) 배열에 추가로 Key값 아이디 데이터 바인딩.
+        $values['user_id'] = auth()->id();
+
+        // Task 레코드를 생성 -> 생성된 Task에 title, body에 데이터를 넣기.
+        $task = Task::create($values);
         /*
             $task = Task::create([
                 'title' => request('title'),
@@ -61,6 +65,21 @@ class TaskController extends Controller
     */
     public function show(Task $task)
     {
+        /*
+        [ 사용자 권한 설정 ]
+        show data 뿌려주기 전,
+        현재 로그인 한 아이디와 게시물의 user_id가 일치하는지 검사하기.
+
+        1) if(auth()->id() != $task -> user_id) {
+               abort(403);
+           }
+        2) abort_if(auth()->id() != $task->user_id, 403);
+
+        3) abort_if(!auth()->user()->owns($task), 403);
+
+        */
+        abort_unless(auth()->user()->owns($task), 403);
+
         return view('tasks.show', [
             'task' => $task
         ]);
@@ -72,6 +91,8 @@ class TaskController extends Controller
     */
     public function edit(Task $task)
     {
+        abort_unless(auth()->user()->owns($task), 403);
+
         return view('tasks.edit', [
             'task' => $task
         ]);
@@ -86,6 +107,9 @@ class TaskController extends Controller
     */
     public function update(Task $task)
     {
+        // [ 사용자 권한 설정 ]
+        abort_unless(auth()->user()->owns($task), 403);
+
         request()->validate([
             'title' => 'required',
             'body' => 'required',
@@ -109,6 +133,8 @@ class TaskController extends Controller
     */
     public function destroy(Task $task)
     {
+        abort_unless(auth()->user()->owns($task), 403);
+
         $task->delete();
         return redirect('/tasks');
     }
