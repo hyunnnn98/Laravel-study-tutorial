@@ -5,7 +5,10 @@ Tasks
 @endsection
 
 @section('content')
-<h1>Task List</h1>
+<div>
+    <h1>Task List</h1>
+    <a href="/tasks/create"><button>Create Task</button></a>
+</div>
 <ul>
     {{-- {{$tasks}} --}}
     @foreach ($tasks as $task)
