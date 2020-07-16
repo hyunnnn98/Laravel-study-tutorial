@@ -9,8 +9,12 @@ class TaskController extends Controller
 {
     public function index()
     {
+        // 관계를 설정함으로써, 보다 직관적인 코드로 변경이 가능하다.
+        $tasks = auth()->user()->tasks()->latest()->get();
+
         // 유저 아이디값으로 검색하여 data return.
-        $tasks = Task::latest()->where('user_id', auth()->id())->get();
+        // $tasks = Task::latest()->where('user_id', auth()->id())->get();
+
         return view('tasks.index', [
             'tasks' => $tasks
         ]);

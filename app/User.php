@@ -41,4 +41,12 @@ class User extends Authenticatable
     {
         return auth()->id() == $task->user_id;
     }
+
+    public function tasks() {
+        /*
+            1) $this는 해당 class를 가리킨다.
+            2) n : m 관계 설정하기.
+        */
+        return $this->hasMany(Task::class);
+    }
 }

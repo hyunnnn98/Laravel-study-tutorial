@@ -51,6 +51,10 @@ Route::prefix('tasks')->middleware('auth')->group(function () {
     Route::delete('/{task}', 'TaskController@destroy');
 });
 
+/*
+    라라벨에서 선호하는 CRUD Route페이지 자동으로 생성
+    Route::resource('tasks', 'TaskController')->middleware('auth');
+*/
 
 Auth::routes();
 
