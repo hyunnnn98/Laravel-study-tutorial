@@ -36,7 +36,7 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        if(!\Auth::attempt($validated)) {
+        if (!\Auth::attempt($validated)) {
             return response()->json([
                 'message' => 'Incorrect Email or Password'
             ], 422);
@@ -47,6 +47,18 @@ class AuthController extends Controller
         return response()->json([
             'token' => $user->createToken('Personal Access Token')->accessToken,
             'user' => $user,
+        ], 200);
+    }
+
+    public function logout()
+    {
+        // 리퀘스트에 담긴 토큰 정보를 확인 후 => 해당 사용자 User 정보 확인 가능!
+        $user = request()->user();
+        $user->token()->revoke();
+
+        return response()->json([
+            'message' => 'The user has benn successfuly logged out',
+            'user' => $user
         ], 200);
     }
 }

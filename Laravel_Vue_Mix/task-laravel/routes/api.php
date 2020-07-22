@@ -16,6 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', 'AuthController@register');
 Route::post('/login', 'AuthController@login');
+/*
+    passport를 사용하기 위해서는 인증이 필요하다.
+    따라서, Route에 Middleware를 달아서 인증을 거치고 들어가게 설정하자!!
+
+    auth: 뒤에 오는 값은 config/auth.php에서 설정 가능하다.
+*/
+Route::middleware('auth:api')->post('/logout', 'AuthController@logout');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
