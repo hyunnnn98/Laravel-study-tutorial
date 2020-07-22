@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -26,5 +27,26 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user
         ], 201);
+    }
+
+    public function login(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string'
+        ]);
+
+        if(!\Auth::attempt($validated)) {
+            return response()->json([
+                'message' => 'Incorrect Email or Password'
+            ], 422);
+        }
+
+        $user = $request->user();
+
+        return response()->json([
+            'token' => $user->createToken('Personal Access Token')->accessToken,
+            'user' => $user,
+        ], 200);
     }
 }
