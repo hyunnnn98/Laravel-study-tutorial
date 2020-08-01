@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -31,16 +32,34 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validated = $request->validate([
+        // $validated = $request->validate([
+        //     'email' => 'required|string|email',
+        //     'password' => 'required|string'
+        // ]);
+        $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
-            'password' => 'required|string'
+            'password' => 'required:string',
         ]);
 
-        if (!\Auth::attempt($validated)) {
-            return response()->json([
-                'message' => 'Incorrect Email or Password'
+        // Validator 오류
+        if ($validator->fails()) {
+            return \response()->json([
+                'message' => $validator->errors(),
             ], 422);
         }
+
+        // 로그인 정보가 틀린 경우
+        if (!\Auth::attempt($validator)) {
+            return response()->json([
+                'message' => 'Incorrect Email or Password'
+            ], 401);
+        }
+
+        // if (!\Auth::attempt($validator)) {
+        //     return response()->json([
+        //         'message' => 'Incorrect Email or Password'
+        //     ], 422);
+        // }
 
         $user = $request->user();
 
